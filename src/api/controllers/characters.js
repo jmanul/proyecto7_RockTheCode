@@ -36,8 +36,8 @@ const getCharactersBySeason = async (req, res, next) => {
      try {
 
           const { season } = req.params;
-          const character = await Character.find({ season});
-          return res.status(200).json(character);
+          const characters = await Character.find({ season});
+          return res.status(200).json(characters);
           
      } catch (error) {
           
@@ -46,7 +46,7 @@ const getCharactersBySeason = async (req, res, next) => {
      }
 };
 
-const getCharactersActor = async (req, res, next) => { 
+const getCharactersByActor = async (req, res, next) => { 
 
      try {
 
@@ -60,7 +60,7 @@ const getCharactersActor = async (req, res, next) => {
 
      }
 };
-const getCharactersById = async (req, res, next) => { 
+const getCharacterById = async (req, res, next) => { 
 
      try {
 
@@ -75,7 +75,7 @@ const getCharactersById = async (req, res, next) => {
      }
 };
 
-const postCharacters = async (req, res, next) => { 
+const postCharacter = async (req, res, next) => { 
 
      try {
 
@@ -88,7 +88,7 @@ const postCharacters = async (req, res, next) => {
           return res.status(404).json(error);
      }
 };
-const putCharacters = async (req, res, next) => { 
+const putCharacter = async (req, res, next) => { 
 
      try {
           
@@ -104,7 +104,7 @@ const putCharacters = async (req, res, next) => {
           return res.status(404).json(error);
      }
 };
-const deleteCharacters = async (req, res, next) => { 
+const deleteCharacter = async (req, res, next) => { 
 
      try {
 
@@ -125,9 +125,9 @@ module.exports = {
      getCharacters,
      getCharactersByName,
      getCharactersBySeason,
-     getCharactersActor,
-     postCharacters,
-     putCharacters,
-     deleteCharacters,
-     getCharactersById
+     getCharactersByActor,
+     postCharacter,
+     putCharacter,
+     deleteCharacter,
+     getCharacterById
 };
