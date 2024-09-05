@@ -6,7 +6,7 @@ const getCharacters = async (req, res, next) => {
 
      try {
 
-          const characters = await Character.find();
+          const characters = await Character.find().populate({ path: "actor", select: 'name' }).populate({ path: "season", select: 'number name' });
           return res.status(200).json(characters);
           
      } catch (error) {
@@ -21,7 +21,7 @@ const getCharactersByName = async (req, res, next) => {
      try {
 
           const { name } = req.params;
-          const character = await Character.find({ name});
+          const character = await Character.find({ name }).populate({ path: "actor", select: 'name' });
           return res.status(200).json(character);
           
      } catch (error) {
@@ -36,7 +36,7 @@ const getCharactersBySeason = async (req, res, next) => {
      try {
 
           const { season } = req.params;
-          const characters = await Character.find({ season});
+          const characters = await Character.find({ season }).populate({ path: "actor", select: 'name' });
           return res.status(200).json(characters);
           
      } catch (error) {
@@ -51,7 +51,7 @@ const getCharactersByActor = async (req, res, next) => {
      try {
 
           const { actor } = req.params;
-          const character = await Character.find({ actor });
+          const character = await Character.find({ actor }).populate({path:'actor', select:'name'});
           return res.status(200).json(character);
           
      } catch (error) {
@@ -65,7 +65,7 @@ const getCharacterById = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const character = await Character.findById(id);
+          const character = await Character.findById(id).populate({ path: "actor", select: 'name' });
           return res.status(200).json(character);
           
      } catch (error) {
