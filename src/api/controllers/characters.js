@@ -21,7 +21,7 @@ const getCharactersByName = async (req, res, next) => {
      try {
 
           const { name } = req.params;
-          const character = await Character.find({ name }).populate({ path: "actor", select: 'name' });
+          const character = await Character.find({ name }).populate({ path: "actor", select: 'name' }).populate({ path: "season", select: 'number name' });
           return res.status(200).json(character);
           
      } catch (error) {
@@ -65,7 +65,7 @@ const getCharacterById = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const character = await Character.findById(id).populate({ path: "actor", select: 'name' });
+          const character = await Character.findById(id).populate({ path: "actor", select: 'name' }).populate({ path: "season", select: 'number name' });
           return res.status(200).json(character);
           
      } catch (error) {

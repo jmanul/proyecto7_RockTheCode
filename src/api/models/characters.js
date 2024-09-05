@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const characterSchema = new mongoose.Schema({
 
-     name : { type: String, required: true },
+     name: { type: String, required: true },
      image: [{ type: String, required: true }],
-     actor: { type: mongoose.Types.ObjectId, ref: 'actors', required: true },
-     season: { type: mongoose.Types.ObjectId, ref: 'seasons', required: true },
+     actor: { type: mongoose.Types.ObjectId, ref: 'actors', required: false },
+     season: { type: mongoose.Types.ObjectId, ref: 'seasons', required: false },
      description: { type: String, required: true },
 
 },
