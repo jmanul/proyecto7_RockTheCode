@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "seasonsSeed": "node ./src/utils/seeds/seasons.js",  
     "actorsSeed": "node ./src/utils/seeds/actors.js",  
-    "charactersSeed": "node ./src/utils/seeds/characters.js"  },
+    "charactersSeed": "node ./src/utils/seeds/characters.js" },
   "keywords": [],
   "author": "",
   "license": "ISC",
