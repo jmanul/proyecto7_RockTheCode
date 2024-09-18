@@ -3,7 +3,7 @@ const { getActors, postActor, putActor, deleteActor, getActorsByName, getActorBy
 
 const actorsRouter = require('express').Router();
 
-actorsRouter.get('/name/:name', getActorsByName);
+actorsRouter.get('/:name', getActorsByName);
 actorsRouter.get('/:id', getActorById);
 actorsRouter.get('/', getActors);
 actorsRouter.post('/', postActor);
@@ -11,3 +11,6 @@ actorsRouter.put('/:id', putActor);
 actorsRouter.delete('/:id', deleteActor);
 
 module.exports = actorsRouter;
+
+
+

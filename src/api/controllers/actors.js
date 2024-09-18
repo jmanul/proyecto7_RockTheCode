@@ -1,13 +1,13 @@
 
 const Actor = require("../models/actors");
-
+const Season = require("../models/seasons");
 
 
 const getActors = async (req, res, next) => {
 
      try {
 
-          const actors = await Actor.find();
+          const actors = await Actor.find().populate('seasons', { _id: 0, number: 1, name: 1});
           return res.status(200).json(actors);
 
      } catch (error) {
@@ -66,15 +66,27 @@ const putActor = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const newActor = new Actor(req.body);
-          newActor._id = id;
-          const actorUpdate = await Actor.findByIdAndUpdate(id, newActor, { new: true });
+          const { seasons: newSeasons, ...rest } = req.body;
+
+          let validSeasonIds = [];
+          if (newSeasons) {
+               const validSeasons = await Season.find({ _id: { $in: newSeasons } });
+               validSeasonIds = validSeasons.map(seasons => seasons._id.toString());
+          }
+
+          const updateData = { ...rest }
+
+          if (validSeasonIds.length > 0) {
+               updateData.$addToSet = { seasons: { $each: validSeasonIds } }; 
+          }
+          
+          const actorUpdate = await Actor.findByIdAndUpdate(id, updateData, { new: true });
           return res.status(200).json(actorUpdate);
 
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(500).json({ message: 'Error del servidor', error });
      }
 };
 const deleteActor = async (req, res, next) => {

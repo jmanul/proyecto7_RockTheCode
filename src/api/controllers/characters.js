@@ -36,7 +36,7 @@ const getCharactersBySeason = async (req, res, next) => {
      try {
 
           const { season } = req.params;
-          const characters = await Character.find({ season }).populate({ path: "actor", select: 'name' });
+          const characters = await Character.find({ season });
           return res.status(200).json(characters);
           
      } catch (error) {
