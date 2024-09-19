@@ -1,8 +1,8 @@
 
-const upSeed = require('../../data/logic');
+const upSeed = require('../../utils/seeds/logic');
 const Season = require('../../api/models/seasons');
 const seasons = require('../../data/seasons');
 
-upSeed(Season, seasons);
+upSeed(Season, seasons, 'seasons');
 
 

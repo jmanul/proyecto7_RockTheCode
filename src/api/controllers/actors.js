@@ -51,14 +51,26 @@ const getActorById = async (req, res, next) => {
 const postActor = async (req, res, next) => {
 
      try {
+          
+          const { name, image, birthdate, seasons } = req.body;
 
-          const newActor = new Actor(req.body);
+          // Si seasons está presente, eliminar duplicados del array
+          const uniqueSeasons = seasons ? [...new Set(seasons)] : [];
+
+          // Crear un nuevo actor con los datos proporcionados y el array seasons sin duplicados
+          const newActor = new Actor({
+               name,
+               image,
+               birthdate,
+               seasons: uniqueSeasons
+          });
+         
           const actorSave = await newActor.save();
           return res.status(201).json(actorSave);
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(404).json({ message: 'Error al crear el actor', error });
      }
 };
 const putActor = async (req, res, next) => {
