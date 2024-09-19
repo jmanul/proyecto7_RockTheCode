@@ -7,7 +7,7 @@ const getActors = async (req, res, next) => {
 
      try {
 
-          const actors = await Actor.find().populate('seasons', { _id: 0, number: 1, name: 1});
+          const actors = await Actor.find().populate('seasons', { _id: 0, number: 1, name: 1 });
           return res.status(200).json(actors);
 
      } catch (error) {
@@ -51,22 +51,47 @@ const getActorById = async (req, res, next) => {
 const postActor = async (req, res, next) => {
 
      try {
-          
+
           const { name, image, birthdate, seasons } = req.body;
 
-          // Si seasons está presente, eliminar duplicados del array
-          const uniqueSeasons = seasons ? [...new Set(seasons)] : [];
 
-          // Crear un nuevo actor con los datos proporcionados y el array seasons sin duplicados
-          const newActor = new Actor({
-               name,
-               image,
-               birthdate,
-               seasons: uniqueSeasons
-          });
-         
-          const actorSave = await newActor.save();
-          return res.status(201).json(actorSave);
+          if (seasons.length > 0) {
+
+               // Elimina duplicados en el array 
+
+               const uniqueSeasons = [...new Set(seasons)];
+
+               // Verifica que los ObjectIds en el array seasons existen
+
+               const validSeasons = await Season.find({ _id: { $in: uniqueSeasons } });
+
+               // Filtrar solo los IDs válidos
+
+               const validSeasonIds = validSeasons.map(season => season._id.toString());
+
+               const newActor = new Actor({
+                    name,
+                    image,
+                    birthdate,
+                    seasons: validSeasonIds // Guardar solo los IDs que son válidos
+               });
+
+               const actorSave = await newActor.save();
+               return res.status(201).json(actorSave);
+
+          } else {
+
+               const newActor = new Actor({
+                    name,
+                    image,
+                    birthdate,
+                    seasons: []
+               });
+
+               const actorSave = await newActor.save();
+               return res.status(201).json(actorSave);
+
+          }
 
      } catch (error) {
 
@@ -80,18 +105,28 @@ const putActor = async (req, res, next) => {
           const { id } = req.params;
           const { seasons: newSeasons, ...rest } = req.body;
 
+          // si se añaden nuevos ids a seasons comprobamos si existen en la coleccion
+
           let validSeasonIds = [];
+
           if (newSeasons) {
+
                const validSeasons = await Season.find({ _id: { $in: newSeasons } });
+
                validSeasonIds = validSeasons.map(seasons => seasons._id.toString());
           }
 
+          // objeto de actualizacion sin seasons
+
           const updateData = { ...rest }
 
+          // si hay nuevos ids en seasons los añadimos al objeto de actualizacion evitando duplicidades de en el array seasons
+
           if (validSeasonIds.length > 0) {
-               updateData.$addToSet = { seasons: { $each: validSeasonIds } }; 
+
+               updateData.$addToSet = { seasons: { $each: validSeasonIds } };
           }
-          
+
           const actorUpdate = await Actor.findByIdAndUpdate(id, updateData, { new: true });
           return res.status(200).json(actorUpdate);
 
@@ -101,6 +136,28 @@ const putActor = async (req, res, next) => {
           return res.status(500).json({ message: 'Error del servidor', error });
      }
 };
+
+
+const removeSeasonFromActor = async (req, res, next) => {
+     try {
+          const { actorId, seasonId } = req.params;
+
+
+          const actorUpdate = await Actor.findByIdAndUpdate(
+               actorId,
+               { $pull: { seasons: seasonId } }, // Elimina la temporada del array `seasons`
+               { new: true }
+          );
+
+          return res.status(200).json(actorUpdate);
+
+     } catch (error) {
+          return res.status(500).json({ message: 'Error del servidor', error });
+     }
+};
+
+
+
 const deleteActor = async (req, res, next) => {
 
      try {
@@ -111,7 +168,7 @@ const deleteActor = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json(error);
+          return res.status(500).json({ message: 'Error del servidor', error });
 
      }
 };
@@ -124,5 +181,6 @@ module.exports = {
      getActorsByName,
      postActor,
      putActor,
+     removeSeasonFromActor,
      deleteActor
 };

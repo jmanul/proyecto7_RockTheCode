@@ -66,9 +66,8 @@ const putSeason = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const newSeason = new Season(req.body);
-          newSeason._id = id;
-          const seasonUpdate = await Season.findByIdAndUpdate(id, newSeason, { new: true });
+       
+          const seasonUpdate = await Season.findByIdAndUpdate(id, req.body, { new: true });
           return res.status(200).json(seasonUpdate);
 
 

@@ -16,20 +16,6 @@ const getCharacters = async (req, res, next) => {
      }
 };
 
-const getCharactersByName = async (req, res, next) => { 
-
-     try {
-
-          const { name } = req.params;
-          const character = await Character.find({ name }).populate({ path: "actor", select: 'name' }).populate({ path: "season", select: 'number name' });
-          return res.status(200).json(character);
-          
-     } catch (error) {
-          
-          return res.status(404).json(error);
-
-     }
-};
 
 const getCharactersBySeason = async (req, res, next) => { 
 
@@ -93,9 +79,8 @@ const putCharacter = async (req, res, next) => {
      try {
           
           const { id } = req.params;
-          const newCharacter = new Character(req.body);
-          newCharacter._id = id;
-          const characterUpdate = await Character.findByIdAndUpdate(id, newCharacter, {new : true});
+         
+          const characterUpdate = await Character.findByIdAndUpdate(id, req.body, {new : true});
           return res.status(200).json(characterUpdate);
           
           
@@ -123,7 +108,6 @@ const deleteCharacter = async (req, res, next) => {
 module.exports = {
 
      getCharacters,
-     getCharactersByName,
      getCharactersBySeason,
      getCharactersByActor,
      postCharacter,

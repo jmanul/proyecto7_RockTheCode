@@ -1,4 +1,4 @@
-const { getActors, postActor, putActor, deleteActor, getActorsByName, getActorById } = require("../controllers/actors");
+const { getActors, postActor, putActor, removeSeasonFromActor, deleteActor, getActorsByName, getActorById } = require("../controllers/actors");
 
 
 const actorsRouter = require('express').Router();
@@ -8,6 +8,7 @@ actorsRouter.get('/:id', getActorById);
 actorsRouter.get('/', getActors);
 actorsRouter.post('/', postActor);
 actorsRouter.put('/:id', putActor);
+actorsRouter.delete('/:actorId/seasons/:seasonId', removeSeasonFromActor);
 actorsRouter.delete('/:id', deleteActor);
 
 module.exports = actorsRouter;
