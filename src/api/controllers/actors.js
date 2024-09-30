@@ -1,6 +1,7 @@
 
 const Actor = require("../models/actors");
 const Season = require("../models/seasons");
+const actorsRouter = require("../routes/actors");
 
 
 const getActors = async (req, res, next) => {
@@ -22,7 +23,8 @@ const getActorsByName = async (req, res, next) => {
      try {
 
           const { name } = req.params;
-          const actor = await Actor.find({ name });
+          const actor = await Actor.find({ name }).populate('seasons', { _id: 0, number: 1, name: 1 });
+
           return res.status(200).json(actor);
 
      } catch (error) {
@@ -38,7 +40,12 @@ const getActorById = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const actor = await Actor.findById(id);
+          const actor = await Actor.findById(id).populate('seasons', { _id: 0, number: 1, name: 1 });
+
+          if (!actor) {
+               return res.status(404).json({ message: 'Actor no encontrado' });
+          }
+
           return res.status(200).json(actor);
 
      } catch (error) {
@@ -95,7 +102,7 @@ const postActor = async (req, res, next) => {
 
      } catch (error) {
 
-          return res.status(404).json({ message: 'Error al crear el actor', error });
+          return res.status(404).json(error);
      }
 };
 const putActor = async (req, res, next) => {
@@ -105,7 +112,7 @@ const putActor = async (req, res, next) => {
           const { id } = req.params;
           const { seasons: newSeasons, ...rest } = req.body;
 
-          // si se añaden nuevos ids a seasons comprobamos si existen en la coleccion
+          // si se añaden nuevos ids a seasons comprobamos si existen en la lista de temporadas
 
           let validSeasonIds = [];
 
@@ -128,12 +135,17 @@ const putActor = async (req, res, next) => {
           }
 
           const actorUpdate = await Actor.findByIdAndUpdate(id, updateData, { new: true });
+
+          if (!actorUpdate) {
+               return res.status(404).json({ message: 'Actor no encontrado' });
+          }
+
           return res.status(200).json(actorUpdate);
 
 
      } catch (error) {
 
-          return res.status(500).json({ message: 'Error del servidor', error });
+          return res.status(404).json(error);
      }
 };
 
@@ -149,10 +161,14 @@ const removeSeasonFromActor = async (req, res, next) => {
                { new: true }
           );
 
+          if (!actorUpdate) {
+               return res.status(404).json({ message: 'Actor no encontrado' });
+          }
+
           return res.status(200).json(actorUpdate);
 
      } catch (error) {
-          return res.status(500).json({ message: 'Error del servidor', error });
+          return res.status(404).json(error);
      }
 };
 
@@ -164,11 +180,19 @@ const deleteActor = async (req, res, next) => {
 
           const { id } = req.params;
           const actorDelete = await Actor.findByIdAndDelete(id);
-          return res.status(200).json(actorDelete);
+          
+          if (!actorDelete) {
+               return res.status(404).json({ message: 'Actor no encontrado' });
+          }
+
+          return res.status(200).json({
+               message: 'El actor fue eliminado',
+               actor: actorDelete
+           });
 
      } catch (error) {
 
-          return res.status(500).json({ message: 'Error del servidor', error });
+          return res.status(404).json(error);
 
      }
 };

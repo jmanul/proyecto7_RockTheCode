@@ -39,6 +39,11 @@ const getSeasonById = async (req, res, next) => {
 
           const { id } = req.params;
           const season = await Season.findById(id);
+
+          if (!season) {
+               return res.status(404).json({ message: 'temporada no encontrada' });
+          };
+
           return res.status(200).json(season);
 
      } catch (error) {
@@ -68,6 +73,11 @@ const putSeason = async (req, res, next) => {
           const { id } = req.params;
        
           const seasonUpdate = await Season.findByIdAndUpdate(id, req.body, { new: true });
+
+          if (!seasonUpdate) {
+               return res.status(404).json({ message: 'temporada no encontrada' });
+          }
+
           return res.status(200).json(seasonUpdate);
 
 
@@ -82,7 +92,15 @@ const deleteSeason = async (req, res, next) => {
 
           const { id } = req.params;
           const seasonDelete = await Season.findByIdAndDelete(id);
-          return res.status(200).json(seasonDelete);
+
+          if (!seasonDelete) {
+               return res.status(404).json({ message: 'temporada no encontrada' });
+          }
+
+          return res.status(200).json({
+               message: 'La temporada fue eliminada',
+               season: season66f84d9ccbf39570e326ece9Delete
+          });
 
      } catch (error) {
 

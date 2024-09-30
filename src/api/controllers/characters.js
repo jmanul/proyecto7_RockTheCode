@@ -52,6 +52,11 @@ const getCharacterById = async (req, res, next) => {
 
           const { id } = req.params;
           const character = await Character.findById(id).populate({ path: "actor", select: 'name' }).populate({ path: "season", select: 'number name' });
+
+          if (!character) {
+               return res.status(404).json({ message: 'personaje no encontrado' });
+          }
+
           return res.status(200).json(character);
           
      } catch (error) {
@@ -80,7 +85,12 @@ const putCharacter = async (req, res, next) => {
           
           const { id } = req.params;
          
-          const characterUpdate = await Character.findByIdAndUpdate(id, req.body, {new : true});
+          const characterUpdate = await Character.findByIdAndUpdate(id, req.body, { new: true });
+          
+          if (!characterUpdate) {
+               return res.status(404).json({ message: 'personaje no encontrado' });
+          }
+
           return res.status(200).json(characterUpdate);
           
           
@@ -95,7 +105,15 @@ const deleteCharacter = async (req, res, next) => {
 
           const { id } = req.params;
           const characterDelete = await Character.findByIdAndDelete(id);
-          return res.status(200).json(characterDelete);
+
+          if (!characterDelete) {
+               return res.status(404).json({ message: 'personaje no encontrado' });
+          }
+
+          return res.status(200).json({
+               message: 'El personaje fue eliminado',
+               character: characterDelete
+});
           
      } catch (error) {
 

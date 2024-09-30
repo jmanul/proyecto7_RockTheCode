@@ -4,7 +4,7 @@ const { getActors, postActor, putActor, removeSeasonFromActor, deleteActor, getA
 const actorsRouter = require('express').Router();
 
 actorsRouter.get('/:name', getActorsByName);
-actorsRouter.get('/:id', getActorById);
+actorsRouter.get('/id/:id', getActorById);
 actorsRouter.get('/', getActors);
 actorsRouter.post('/', postActor);
 actorsRouter.put('/:id', putActor);
