@@ -99,7 +99,7 @@ const deleteSeason = async (req, res, next) => {
 
           return res.status(200).json({
                message: 'La temporada fue eliminada',
-               season: season66f84d9ccbf39570e326ece9Delete
+               season: seasonDelete
           });
 
      } catch (error) {
