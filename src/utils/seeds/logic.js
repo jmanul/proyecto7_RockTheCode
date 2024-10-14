@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 
 
@@ -5,7 +6,7 @@ const upSeed = async (model, collectionDate, name) => {
 
      try {
 
-          await mongoose.connect("mongodb+srv://jmanul77:7HUBB2D5pNbCBjee@cluster0.s7uco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+          await mongoose.connect(process.env.DDBB_URL);
 
           await model.collection.drop();
           console.log(`delete ${name}`);

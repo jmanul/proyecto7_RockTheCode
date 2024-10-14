@@ -1,23 +1,27 @@
 {
-  "name": "proyecto6_rockthecode",
+  "name": "proyecto7_rockthecode",
   "version": "1.0.0",
-  "description": "",
+  "description": "![logo]()",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "seasonsSeed": "node ./src/utils/seeds/seasons.js",  
-    "actorsSeed": "node ./src/utils/seeds/actors.js",  
-    "charactersSeed": "node ./src/utils/seeds/characters.js"},
+    "piecesSeed": "node ./src/utils/seeds/pieces.js",
+    "servicesSeed": "node ./src/utils/seeds/services.js",
+    "vehiclesSeed": "node ./src/utils/seeds/vehicles.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.7"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "mongoose": "^8.5.3"
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.0"
   }
 }
