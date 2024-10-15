@@ -8,13 +8,13 @@ const getVehicles = async (req, res, next) => {
 
           const vehicles = await Vehicle.find().populate({
                path: 'services',
-               select: 'name price time',
+               select: 'name price time pieces',
                populate: {
                     path: 'pieces',
                     select: 'name price'
                }
-          });
-
+          })
+          
           if (!vehicles) {
                return res.status(404).json({ message: 'vehiculos no encontrados' });
           }
@@ -36,16 +36,13 @@ const getVehicleById = async (req, res, next) => {
           const { id } = req.params;
           const vehicle = await Vehicle.findById(id).populate({
                path: 'services',
-               select: 'name price time',
+               select: 'name price time pieces',
                populate: {
                     path: 'pieces',
                     select: 'name price'
                }
               
-          }).populate({
-               path: 'user',
-               select: 'userName'
-          });;
+          })
 
           if (!vehicle) {
                return res.status(404).json({ message: 'vehiculo no encontrado' });
