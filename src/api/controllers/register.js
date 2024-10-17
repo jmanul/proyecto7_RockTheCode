@@ -21,7 +21,7 @@ const register = async (req, res, next) => {
           const newUser = new User({
                userName,
                password: hashedPassword,
-               role: 'user'
+               roll: 'user'
           });
 
 
@@ -38,37 +38,52 @@ const register = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-     try {
-          const { userName, password } = req.body;
+     
 
-          // Buscar al usuario por userName 
+   
+          try {
+               const { userName, password } = req.body;
 
-          const user = await User.findOne({ userName });
+            
+               const user = await User.findOne({ userName });
 
-          if (!user) {
-               return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });
+               if (!user) {
+                    return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });
+               }
+
+
+               const isMatch = await bcrypt.compare(password.trim(), user.password.trim());
+
+
+               if (!isMatch) {
+                    return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });
+               }
+
+
+               const { _id, ...userRest } = user
+
+               const token = generateToken(user._id); 
+
+              
+               return res.status(200).json({
+                    message: 'Autenticación exitosa',
+                    token,
+                    user: {
+                         _id: user._id,
+                         userName: user.userName,
+                         roll: user.roll,
+                         vehicles: user.vehicles
+                    }
+               });
+        
+
+          } catch (error) {
+               return res.status(500).json({ message: 'Error en la autenticación', error });
+
+               
           }
+  
 
-          // Comparar la contraseña
-          const isPasswordValid = bcrypt.compareSync(password, user.password);
-          if (!isPasswordValid) {
-               return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });
-          }
-
-          // Generar el token JWT
-          const token = generateToken(user._id);
-
-          // Enviar la respuesta exitosa con el token y los datos del usuario (sin la contraseña)
-          const { password: userPassword, ...userWithoutPassword } = user._doc;
-          return res.status(200).json({
-               message: 'Autenticación exitosa',
-               token,
-               user: userWithoutPassword
-          });
-
-     } catch (error) {
-          return res.status(500).json({ message: 'Error en la autenticación', error });
-     }
 };
 
 

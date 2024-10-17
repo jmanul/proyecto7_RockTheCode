@@ -112,8 +112,8 @@ const postUser = async (req, res, next) => {
 
           // Verificar si el userName ya existe
 
-          const existgUser = await User.findOne({ userName });
-          if (existgUser) {
+          const existUser = await User.findOne({ userName });
+          if (existUser) {
                return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
           }
 
