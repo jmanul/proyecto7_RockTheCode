@@ -2,6 +2,7 @@
 
 const User = require("../models/users");
 const Vehicle = require("../models/vehicles");
+const bcrypt = require('bcrypt');
 
 
 const getUsers = async (req, res, next) => {
@@ -107,10 +108,17 @@ const postUser = async (req, res, next) => {
 
      try {
 
-          const { userName, password, roll, vehicles } = req.body;
+          const { userName, password,vehicles, roll } = req.body;
+
+          // Verificar si el userName ya existe
+
+          const existgUser = await User.findOne({ userName });
+          if (existgUser) {
+               return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
+          }
 
 
-          if (vehicles.length > 0) { 
+          if (vehicles.length > 0) {
 
                const uniqueVehicles = [...new Set(vehicles)];
 
@@ -122,7 +130,7 @@ const postUser = async (req, res, next) => {
                     userName,
                     password,
                     roll,
-                    vehicles: validVehiclesIds 
+                    vehicles: validVehiclesIds
 
                });
 
@@ -131,7 +139,7 @@ const postUser = async (req, res, next) => {
                     message: 'usuario creado correctamente',
                     service: userSave
                });
-               
+
           }
 
      } catch (error) {
@@ -141,14 +149,18 @@ const postUser = async (req, res, next) => {
 
 
 };
+
+
 const putUser = async (req, res, next) => {
 
      try {
  
           const { id } = req.params;
-          const { vehicles: newVehicles, ...rest } = req.body;
+          const { vehicles: newVehicles,password, ...rest } = req.body;
 
           let validVehiclesIds = [];
+
+          // si se introducen nuevos vehiculos se comprueba si son validos
 
           if (newVehicles) {
 
@@ -158,13 +170,25 @@ const putUser = async (req, res, next) => {
           }
 
           const updateData = { ...rest }
+          
+          // si hay nuevo password lo encryptamos
 
-          if (validVehiclesIds.length > 0) {
-
-               updateData.$addToSet = { vehicles: { $each: validVehiclesIds } };
+          if (password) {
+               const hashedPassword = await bcrypt.hash(password, 10);
+               updateData.password = hashedPassword;
           }
 
+          // actualizamos el usuario sin los vehiculos
+
           const userUpdate = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+          // añadimos los nuevos vehiculos si los hay y actualizamos
+
+          if (validVehiclesIds.length > 0) {
+               await User.findByIdAndUpdate(id, {
+                    $addToSet: { vehicles: { $each: validVehiclesIds } },
+               }, { new: true });
+          }
 
           if (!userUpdate) {
                return res.status(404).json({ message: 'usuario no encontrado' });

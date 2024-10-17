@@ -6,6 +6,7 @@ const piecesRouter = require('./src/api/routes/pieces');
 const servicesRouter = require('./src/api/routes/services');
 const usersRouter = require('./src/api/routes/users');
 const vehiclesRouter = require('./src/api/routes/vehicles');
+const registerRouter = require('./src/api/routes/register');
 
  const app = express();
 
@@ -18,6 +19,7 @@ app.use('/api/v1/pieces', piecesRouter);
 app.use('/api/v1/services', servicesRouter);
 app.use('/api/v1/users', usersRouter);
 app.use('/api/v1/vehicles', vehiclesRouter);
+app.use('/api/v1/register', registerRouter);
 
 app.use('*', (req, res, next) => { 
 

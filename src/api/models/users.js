@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
 
      userName: { type: String, required: true, unique:true, trim: true },
      password: { type: String, required: true, trim: true },
-     roll: [{ type: String, required: true, enum: ["user", "administrator"],trim: true}],
+     roll: { type: String, required: true, enum: ["user", "administrator"],default: "user",trim: true},
      vehicles: [{ type: mongoose.Types.ObjectId, ref: 'vehicles', required: false}]
     
 },
