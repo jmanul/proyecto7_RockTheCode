@@ -108,15 +108,31 @@ const postUser = async (req, res, next) => {
 
      try {
 
-          const { userName, password,vehicles, roll } = req.body;
-
-          // Verificar si el userName ya existe
-
+          const { userName, password, vehicles, roll } = req.body;
+          
           const existUser = await User.findOne({ userName });
+
           if (existUser) {
                return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
           }
 
+          if (!vehicles) {
+
+               const newUser = new User({
+                    userName,
+                    password,
+                    roll,
+                    vehicles: []
+
+               });
+
+               const userSave = await newUser.save();
+               return res.status(201).json({
+                    message: 'usuario creado correctamente',
+                    user: userSave
+               });
+          }
+           
 
           if (vehicles.length > 0) {
 
@@ -126,22 +142,24 @@ const postUser = async (req, res, next) => {
 
                const validVehiclesIds = validVehicles.map(vehicle => vehicle._id.toString());
 
-               const newUser = new User({
+             const newUser = new User({
                     userName,
                     password,
                     roll,
                     vehicles: validVehiclesIds
 
-               });
-
+             });
+               
                const userSave = await newUser.save();
                return res.status(201).json({
                     message: 'usuario creado correctamente',
-                    service: userSave
+                    user: userSave
                });
 
-          }
+          } 
+      
 
+          
      } catch (error) {
 
           return res.status(404).json(error);
@@ -159,8 +177,6 @@ const putUser = async (req, res, next) => {
           const { vehicles: newVehicles,password, ...rest } = req.body;
 
           let validVehiclesIds = [];
-
-          // si se introducen nuevos vehiculos se comprueba si son validos
 
           if (newVehicles) {
 

@@ -1,5 +1,6 @@
 
 const Vehicle = require("../models/vehicles");
+const Service = require("../models/services");
 
 
 const getVehicles = async (req, res, next) => {
@@ -80,8 +81,9 @@ const putVehicle = async (req, res, next) => {
      try {
 
           const { id } = req.params;
+          const { services, ...rest } = req.body;
 
-          const VehicleUpdate = await Vehicle.findByIdAndUpdate(id, req.body, { new: true });
+          const VehicleUpdate = await Vehicle.findByIdAndUpdate(id, rest, { new: true });
 
           if (!VehicleUpdate) {
                return res.status(404).json({ message: 'vehiculo no encontrado' });
@@ -95,6 +97,34 @@ const putVehicle = async (req, res, next) => {
           return res.status(404).json(error);
      }
 };
+
+const addVehicleService = async (req, res, next) => {
+     try {
+          const { id } = req.params;
+          const { serviceId, date } = req.body;
+
+          const service = await Service.findById(serviceId);
+
+          if (!service) {
+               return res.status(404).json({ message: 'el servicio no existe' });
+          }
+
+          const vehicle = await Vehicle.findById(id);
+          if (!vehicle) {
+               return res.status(404).json({ message: 'el veihiculo no existe' });
+          }
+
+          vehicle.services.push({ serviceId, date });
+          await vehicle.save();
+
+          return res.status(200).json(vehicle);
+
+     } catch (error) {
+
+          return res.status(500).json({ error });
+     }
+};
+
 
 const deleteVehicle = async (req, res, next) => {
 
@@ -126,5 +156,6 @@ module.exports = {
      getVehicleById,
      postVehicle,
      putVehicle,
+     addVehicleService,
      deleteVehicle
 };

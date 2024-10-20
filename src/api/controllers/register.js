@@ -39,20 +39,19 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
      
-
-   
           try {
                const { userName, password } = req.body;
 
             
-               const user = await User.findOne({ userName });
+               const user = await User.findOne({ userName }).populate({ path: "vehicles", select: 'plate brand model engine service' });
+        
 
                if (!user) {
                     return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });
                }
 
 
-               const isMatch = await bcrypt.compare(password.trim(), user.password.trim());
+               const isMatch = bcrypt.compareSync(password.trim(), user.password.trim());
 
 
                if (!isMatch) {
@@ -66,7 +65,7 @@ const login = async (req, res, next) => {
 
               
                return res.status(200).json({
-                    message: 'Autenticación exitosa',
+                    message: 'Autenticación correcta',
                     token,
                     user: {
                          _id: user._id,
@@ -74,8 +73,7 @@ const login = async (req, res, next) => {
                          roll: user.roll,
                          vehicles: user.vehicles
                     }
-               });
-        
+               })
 
           } catch (error) {
                return res.status(500).json({ message: 'Error en la autenticación', error });
