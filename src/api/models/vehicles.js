@@ -34,8 +34,3 @@ const Vehicle = mongoose.model('vehicles', vehicleSchema, 'vehicles');
 
 module.exports = Vehicle;
 
-//TODO: {
-//TODO:   "serviceId": "6523456789abcdef12345678",
-//TODO:                    "date": "2024-10-15",
-//TODO:                    "time": "14:30:00"
-//TODO:               }

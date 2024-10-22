@@ -13,7 +13,7 @@ const getUsers = async (req, res, next) => {
                path: 'vehicles',
                select: 'plate brand model engine services',
                populate: {
-                    path: 'services',
+                    path: 'services.serviceId',
                     select: 'name price time',
                     populate: {
                          path: 'pieces',
@@ -45,7 +45,7 @@ const getUserById = async (req, res, next) => {
                path: 'vehicles',
                select: 'plate brand model engine services',
                populate: {
-                    path: 'services',
+                    path: 'services.serviceId',
                     select: 'name price time',
                     populate: {
                          path: 'pieces',
@@ -82,7 +82,7 @@ const getUserByVehicle = async (req, res, next) => {
                path: 'vehicles',
                select: 'plate brand model engine services',
                populate: {
-                    path: 'services',
+                    path: 'services.serviceId',
                     select: 'name price time',
                     populate: {
                          path: 'pieces',

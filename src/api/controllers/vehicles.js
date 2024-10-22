@@ -8,7 +8,7 @@ const getVehicles = async (req, res, next) => {
      try {
 
           const vehicles = await Vehicle.find().populate({
-               path: 'services',
+               path: 'services.serviceId',
                select: 'name price time pieces',
                populate: {
                     path: 'pieces',
@@ -36,7 +36,7 @@ const getVehicleById = async (req, res, next) => {
 
           const { id } = req.params;
           const vehicle = await Vehicle.findById(id).populate({
-               path: 'services',
+               path: 'services.serviceId',
                select: 'name price time pieces',
                populate: {
                     path: 'pieces',
