@@ -18,10 +18,10 @@ const getUsers = async (req, res, next) => {
                     populate: {
                          path: 'pieces',
                          select: 'name price'
-               }
+                    }
                }
           });
-     
+
           if (!users) {
                return res.status(404).json({ message: 'usuarios no encontrados' });
           }
@@ -78,7 +78,7 @@ const getUserByVehicle = async (req, res, next) => {
                return res.status(404).json({ message: 'Vehiculo no encontrado' });
           }
 
-          const user = await User.findOne({vehicles : vehicle }).populate({
+          const user = await User.findOne({ vehicles: vehicle }).populate({
                path: 'vehicles',
                select: 'plate brand model engine services',
                populate: {
@@ -109,7 +109,7 @@ const postUser = async (req, res, next) => {
      try {
 
           const { userName, password, vehicles, roll } = req.body;
-          
+
           const existUser = await User.findOne({ userName });
 
           if (existUser) {
@@ -132,7 +132,7 @@ const postUser = async (req, res, next) => {
                     user: userSave
                });
           }
-           
+
 
           if (vehicles.length > 0) {
 
@@ -142,24 +142,24 @@ const postUser = async (req, res, next) => {
 
                const validVehiclesIds = validVehicles.map(vehicle => vehicle._id.toString());
 
-             const newUser = new User({
+               const newUser = new User({
                     userName,
                     password,
                     roll,
                     vehicles: validVehiclesIds
 
-             });
-               
+               });
+
                const userSave = await newUser.save();
                return res.status(201).json({
                     message: 'usuario creado correctamente',
                     user: userSave
                });
 
-          } 
-      
+          }
 
-          
+
+
      } catch (error) {
 
           return res.status(404).json(error);
@@ -168,13 +168,36 @@ const postUser = async (req, res, next) => {
 
 };
 
+const putRollUser = async (req, res, next) => {
+
+     try {
+
+          const { id } = req.params;
+          const { roll } = req.body;
+
+          const updateData = { roll }
+
+          const userUpdate = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+          if (!userUpdate) {
+               return res.status(404).json({ message: 'usuario no encontrado' });
+          }
+
+          return res.status(200).json(userUpdate);
+
+     } catch (error) {
+
+          return res.status(404).json(error);
+     }
+}
+
 
 const putUser = async (req, res, next) => {
 
      try {
- 
+
           const { id } = req.params;
-          const { vehicles: newVehicles,password, ...rest } = req.body;
+          const { vehicles: newVehicles, password, roll, ...rest } = req.body;
 
           let validVehiclesIds = [];
 
@@ -186,7 +209,7 @@ const putUser = async (req, res, next) => {
           }
 
           const updateData = { ...rest }
-          
+
           // si hay nuevo password lo encryptamos
 
           if (password) {
@@ -227,7 +250,7 @@ const removeVehicleFromUser = async (req, res, next) => {
 
           const userUpdate = await User.findByIdAndUpdate(
                idUser,
-               { $pull: { vehicles: idVehicle } }, 
+               { $pull: { vehicles: idVehicle } },
                { new: true }
           );
 
@@ -277,6 +300,7 @@ module.exports = {
      getUserById,
      getUserByVehicle,
      postUser,
+     putRollUser,
      putUser,
      removeVehicleFromUser,
      deleteUser

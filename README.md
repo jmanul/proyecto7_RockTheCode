@@ -1,12 +1,14 @@
-# proyecto7_RockTheCode
+# proyecto7_RockTheCode : API REST AUTH de Gestión de Usuarios, Vehículos y Servicios
 
-![logo]()
+
+![logo](https://res.cloudinary.com/dn6utw1rl/image/upload/v1729644440/mecanico_lrmnou.png
+)
 
 ## Descripción
 
 
 
-## Endpoints de actores
+## Endpoints de users
 
 > GET /api/v1/
 
