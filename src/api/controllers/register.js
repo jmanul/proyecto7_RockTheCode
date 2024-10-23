@@ -16,11 +16,9 @@ const register = async (req, res, next) => {
                return res.status(400).json({ message: 'El nombre de usuario ya existe' });
           }
 
-          const hashedPassword = bcrypt.hashSync(password, 10); 
-
           const newUser = new User({
                userName,
-               password: hashedPassword,
+               password,
                roll: 'user'
           });
 
@@ -41,18 +39,21 @@ const login = async (req, res, next) => {
      
           try {
                const { userName, password } = req.body;
-
+         
+               console.log(password);
+              
             
                const user = await User.findOne({ userName }).populate({ path: "vehicles", select: 'plate brand model engine service' });
         
-
+               console.log(user.password);
                if (!user) {
                     return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });
                }
 
 
-               const isMatch = bcrypt.compareSync(password.trim(), user.password.trim());
-
+               const isMatch = await bcrypt.compare(password.trim(), user.password.trim());
+                
+               console.log(isMatch);
 
                if (!isMatch) {
                     return res.status(400).json({ message: 'Usuario o contraseña incorrecta' });

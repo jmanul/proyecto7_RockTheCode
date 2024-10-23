@@ -159,13 +159,13 @@ const postUser = async (req, res, next) => {
           }
 
 
-
      } catch (error) {
 
           return res.status(404).json(error);
      }
 
 
+    
 };
 
 const putRollUser = async (req, res, next) => {
@@ -197,7 +197,7 @@ const putUser = async (req, res, next) => {
      try {
 
           const { id } = req.params;
-          const { vehicles: newVehicles, password, roll, ...rest } = req.body;
+          const { vehicles: newVehicles, password, roll, userName, ...rest } = req.body;
 
           let validVehiclesIds = [];
 
@@ -241,7 +241,6 @@ const putUser = async (req, res, next) => {
           return res.status(404).json(error);
      }
 };
-
 
 const removeVehicleFromUser = async (req, res, next) => {
      try {
