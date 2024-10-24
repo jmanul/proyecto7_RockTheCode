@@ -1,16 +1,17 @@
 
 const idAuth = (req, res, next) => {
      try {
-          const { roll, _id } = req.user;
-          const { id: userId } = req.params;
+          const { roll, _id, userName } = req.user;
+          const { id: userId, userName: nameUser } = req.params;
 
           // Si es administrador, tiene acceso a todos los usuarios
           if (roll === 'administrator') {
                return next();
           }
-
-          // Si es un usuario user y el ID coincide con su propio ID, permite acceso
-          if (roll === 'user' && _id.toString() === userId) {
+         
+          // Si es un usuario user y el ID coincide con su propio ID o su userName, permite acceso
+          
+          if (_id.toString() === userId || userName === nameUser) {
                return next(); // Permitir acceso a la ruta
           }
 
