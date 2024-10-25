@@ -110,6 +110,7 @@ const addVehicleService = async (req, res, next) => {
           }
 
           const vehicle = await Vehicle.findById(id);
+
           if (!vehicle) {
                return res.status(404).json({ message: 'el veihiculo no existe' });
           }
@@ -117,7 +118,28 @@ const addVehicleService = async (req, res, next) => {
           vehicle.services.push({ serviceId, date });
           await vehicle.save();
 
-          return res.status(200).json(vehicle);
+          // Populamos el vehículo actualizado para devolver los datos del último servicio añadido
+
+          const updatedVehicle = await Vehicle.findById(id).populate({
+               path: 'services.serviceId',
+               select: 'name price time pieces',
+               populate: {
+                    path: 'pieces',
+                    select: 'name price'
+               }
+          });
+
+          // Obtenemos el último servicio añadido
+          
+          const lastServiceAdded = updatedVehicle.services[updatedVehicle.services.length - 1];
+
+          return res.status(200).json({
+               message: 'Servicio añadido con éxito',
+               lastServiceAdded,
+               vehicle: updatedVehicle
+          });
+      
+     
 
      } catch (error) {
 

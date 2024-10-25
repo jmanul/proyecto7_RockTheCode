@@ -16,7 +16,7 @@ usersRouter.put('/password/:userName', isAuth, idAuth, putPasswordByUserName);
 usersRouter.put('/:id', isAuth, idAuth, putUser);
 usersRouter.put('/:id/vehicles', isAuth, rolAuth('administrator'), addVehicleFromUser);
 usersRouter.delete('/:idUser/vehicles/:idVehicle', isAuth, rolAuth('administrator'), removeVehicleFromUser,);
-usersRouter.delete('/:id', isAuth, rolAuth('administrator'), deleteUser);
+usersRouter.delete('/:id', isAuth, idAuth, deleteUser);
 
 
 module.exports = usersRouter;

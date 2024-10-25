@@ -6,7 +6,7 @@ const {getPieces, getPieceById, postPiece, putPiece, deletePiece} = require("../
 const piecesRouter = require('express').Router();
 
 piecesRouter.get('/id/:id', isAuth, rolAuth('administrator'), getPieceById);
-piecesRouter.get('/', isAuth, rolAuth('user','administrator'), getPieces);
+piecesRouter.get('/', isAuth, getPieces);
 piecesRouter.post('/', isAuth, rolAuth('administrator'), postPiece);
 piecesRouter.put('/:id', isAuth, rolAuth('administrator'), putPiece);
 piecesRouter.delete('/:id', isAuth, rolAuth('administrator'), deletePiece);

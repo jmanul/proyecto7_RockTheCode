@@ -5,7 +5,7 @@
 
 #### Esta API permite gestionar usuarios, vehículos, y servicios realizados a los vehículos en un entorno de taller automotriz. Está construida utilizando Node.js, Express y Mongoose para la base de datos MongoDB. Además, la autenticación y autorización se manejan mediante JWT (JSON Web Tokens) para garantizar que solo los usuarios autenticados y autorizados puedan acceder a los diferentes recursos de la API
 
-## Endpoints de registro y login
+## Endpoints de registro y login 🔓🔐
 
 > POST /api/v1/register
 
@@ -87,7 +87,7 @@
 
 ```
 
-## Endpoints de users
+## Endpoints de users 👦👧
 
 > GET /api/v1/users
 
@@ -295,6 +295,7 @@
 
 - Descripción: Crea un nuevo usuario
 - Restricciones: solo disponible para administradores
+  
 - Cuerpo de la solicitud:
   
 ```json
@@ -307,6 +308,7 @@
 }
 
 ```
+
 - Respuesta:
   
 ```json
@@ -333,6 +335,7 @@
 
 - Descripción: Actualiza el roll de un usuario
 - Restricciones: solo disponible para administradores
+  
 - Parámetros:
   
   - :id = _id del usuario
@@ -346,6 +349,7 @@
 }
 
 ```
+
 - Respuesta:
   
 ```json
@@ -367,8 +371,9 @@
 
 > PUT /api/v1/users/password/:userName
 
-- Descripción: Actualiza el password de un usuario
+- Descripción: Actualiza el password por el nombre de usuario
 - Restricciones: solo disponible para administradores y usuarios a su propio password
+  
 - Parámetros:
   
   - :userName = userName del usuario
@@ -383,6 +388,7 @@
 }
 
 ```
+
 - Respuesta:
   
 ```json
@@ -407,6 +413,7 @@
 
 - Descripción: Actualiza los datos de un usuario, menos el roll, userName y vehicles
 - Restricciones: solo disponible para administradores y usuarios a su propia información
+  
 - Parámetros:
   
   - :id = _id del usuario
@@ -420,6 +427,7 @@
 }
 
 ```
+
 - Respuesta:
   
 ```json
@@ -444,6 +452,7 @@
 
 - Descripción: Añade vehiculos a un usuario
 - Restricciones: solo disponible para administradores
+  
 - Parámetros:
   
   - :id = _id del usuario
@@ -458,6 +467,7 @@
 }
 
 ```
+
 - Respuesta:
   
 ```json
@@ -498,11 +508,11 @@
  
 - Descripción: Elimina un vehiculo de un usuario
 - Restricciones: solo disponible para administradores
+  
 - Parámetros:
   
   - :idUser = _id del usuario
   - :idVehicle = _id del Vehiculo
- 
   
 - Respuesta:
   
@@ -529,7 +539,8 @@
 
  
 - Descripción: Elimina un usuario
-- Restricciones: solo disponible para administradores
+- Restricciones: solo disponible para administradores o usuarios a su propio perfil
+  
 - Parámetros:
   
   - :id = _id del usuario
@@ -554,3 +565,624 @@
 
 ```
 
+## Endpoints de vehicles 🚗🚙
+
+> GET /api/v1/vehicles
+
+- Descripción: Obtiene la lista de todos los vehiculos
+- Restricciones: Solo disponible para administradores
+   
+- Respuesta:
+  
+```json
+[
+	{
+		"_id": "670d9c251620708441ad7329",
+		"plate": "XYZ789",
+		"brand": "Ford",
+		"model": "F-150",
+		"engine": "diesel",
+		"services": [
+			{
+				"serviceId": {
+					"_id": "670d9997adb7d10304361898",
+					"name": "Cambio de pastillas de freno",
+					"price": 120,
+					"time": 60,
+					"pieces": [
+						{
+							"_id": "67170a07e963f82db1b3f489",
+							"name": "Pastillas de freno",
+							"price": 70
+						}
+					]
+				},
+				"date": "2024-10-22T02:38:46.812Z",
+				"_id": "67171036269f4ddcb0669a02"
+			}
+		],
+		"__v": 1,
+		"createdAt": "2024-10-14T22:33:09.362Z",
+		"updatedAt": "2024-10-22T02:38:46.813Z"
+	},
+	{
+		"_id": "670d9c251620708441ad732a",
+		"plate": "LMN456",
+		"brand": "Tesla",
+		"model": "Model 3",
+		"engine": "electric",
+		"services": [],
+		"__v": 0,
+		"createdAt": "2024-10-14T22:33:09.362Z",
+		"updatedAt": "2024-10-14T22:33:09.362Z"
+	}
+]
+
+```
+
+> GET /api/v1/vehicles/:id
+
+- Descripción: Busca un vehiculo por su id
+- Restricciones: Solo disponible para administradores 
+  
+- Parámetros:
+  
+  - :id = _id del vehiculo
+  
+- Respuesta:
+  
+```json
+{
+	"_id": "670d9c251620708441ad732a",
+	"plate": "LMN456",
+	"brand": "Tesla",
+	"model": "Model 3",
+	"engine": "electric",
+	"services": [],
+	"__v": 0,
+	"createdAt": "2024-10-14T22:33:09.362Z",
+	"updatedAt": "2024-10-14T22:33:09.362Z"
+}
+
+```
+
+> POST /api/v1/vehicles
+
+- Descripción: Crea un nuevo vehiculo
+- Restricciones: solo disponible para administradores
+  
+- Cuerpo de la solicitud:
+  
+```json
+ {
+   "plate": "HJR6666",
+   "brand": "VOLVO",
+   "model": "S6 D4",
+   "engine": "diesel"
+  }
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"message": "vehiculo creado correctamente",
+	"service": {
+		"plate": "HJR6666",
+		"brand": "VOLVO",
+		"model": "S6 D4",
+		"engine": "diesel",
+		"_id": "671af47d0495760df581ce89",
+		"services": [],
+		"createdAt": "2024-10-25T01:29:33.814Z",
+		"updatedAt": "2024-10-25T01:29:33.814Z",
+		"__v": 0
+	}
+}
+
+```
+
+> PUT /api/v1/vehicles/:id
+
+- Descripción: Actualiza los datos de un vehiculo
+- Restricciones: solo disponible para administradores 
+  
+- Parámetros:
+  
+  - :id = _id del vehiculo
+  
+- Cuerpo de la solicitud:
+  
+```json
+ {
+   "model": "S6 D3",
+   "engine": "gasoline"
+  }
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"_id": "671af47d0495760df581ce89",
+	"plate": "HJR6666",
+	"brand": "VOLVO",
+	"model": "S6 D3",
+	"engine": "gasoline",
+	"services": [],
+	"createdAt": "2024-10-25T01:29:33.814Z",
+	"updatedAt": "2024-10-25T01:42:06.583Z",
+	"__v": 0
+}
+
+```
+
+> PUT /api/v1/users/:id/service
+
+- Descripción: Añade un servicio a un vehiculo
+- Restricciones: solo disponible para administradores
+  
+- Parámetros:
+  
+  - :id = _id del vehiculo
+  
+- Cuerpo de la solicitud:
+  
+```json
+{
+	"serviceId":"670d9997adb7d10304361898"
+}
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"message": "Servicio añadido con éxito",
+	"lastServiceAdded": {
+		"serviceId": {
+			"_id": "670d9997adb7d1030436189b",
+			"name": "Cambio de correa de distribución",
+			"price": 400,
+			"time": 240,
+			"pieces": []
+		},
+		"date": "2024-10-25T02:23:25.498Z",
+		"_id": "671b011d0206f119d124b0e9"
+	},
+	"vehicle": {
+		"_id": "671af47d0495760df581ce89",
+		"plate": "HJR6666",
+		"brand": "VOLVO",
+		"model": "S6 D3",
+		"engine": "gasoline",
+		"services": [
+			{
+				"serviceId": {
+					"_id": "670d9997adb7d1030436189b",
+					"name": "Cambio de correa de distribución",
+					"price": 400,
+					"time": 240,
+					"pieces": []
+				},
+				"date": "2024-10-25T01:51:03.599Z",
+				"_id": "671af987506478dfe1984975"
+			},
+			{
+				"serviceId": {
+					"_id": "670d9997adb7d10304361898",
+					"name": "Cambio de pastillas de freno",
+					"price": 120,
+					"time": 60,
+					"pieces": [
+						{
+							"_id": "67170a07e963f82db1b3f489",
+							"name": "Pastillas de freno",
+							"price": 70
+						}
+					]
+				},
+				"date": "2024-10-25T01:54:53.537Z",
+				"_id": "671afa6d506478dfe198497d"
+			}
+		],
+		"createdAt": "2024-10-25T01:29:33.814Z",
+		"updatedAt": "2024-10-25T02:23:25.503Z",
+		"__v": 8
+	}
+}
+
+```
+
+> DELETE /api/v1/vehicles/:id
+ 
+- Descripción: Elimina un Vehiculo
+- Restricciones: solo disponible para administradores
+  
+- Parámetros:
+  
+  - :id = _id del vehiculo
+  
+- Respuesta:
+  
+```json
+{
+	"message": "El vehiculo fue eliminado",
+	"vehicle": {
+		"_id": "671af47d0495760df581ce89",
+		"plate": "HJR6666",
+		"brand": "VOLVO",
+		"model": "S6 D3",
+		"engine": "gasoline",
+		"services": [
+			{
+				"serviceId": "670d9997adb7d1030436189b",
+				"date": "2024-10-25T01:51:03.599Z",
+				"_id": "671af987506478dfe1984975"
+			},
+			{
+				"serviceId": "670d9997adb7d10304361898",
+				"date": "2024-10-25T01:54:53.537Z",
+				"_id": "671afa6d506478dfe198497d"
+			}
+		],
+		"createdAt": "2024-10-25T01:29:33.814Z",
+		"updatedAt": "2024-10-25T02:29:53.791Z",
+		"__v": 9
+	}
+}
+
+```
+
+## Endpoints de services 👨‍🔧👩‍🔧
+
+> GET /api/v1/services
+
+- Descripción: Obtiene la lista de todos los servicios
+- Restricciones: disponible para cualquier usuario registrado y autenticado
+   
+- Respuesta:
+  
+```json
+[
+	{
+		"_id": "670d9997adb7d10304361897",
+		"name": "Cambio de aceite",
+		"price": 50,
+		"time": 30,
+		"description": "Servicio completo de cambio de aceite, incluyendo la sustitución del filtro de aceite para garantizar el buen funcionamiento del motor.",
+		"pieces": [],
+		"__v": 0,
+		"createdAt": "2024-10-14T22:22:15.750Z",
+		"updatedAt": "2024-10-14T22:22:15.750Z"
+	},
+	{
+		"_id": "670d9997adb7d1030436189a",
+		"name": "Cambio de filtro de aire",
+		"price": 40,
+		"time": 20,
+		"description": "Sustitución del filtro de aire para mejorar la eficiencia del motor y reducir el consumo de combustible.",
+		"pieces": [],
+		"__v": 0,
+		"createdAt": "2024-10-14T22:22:15.751Z",
+		"updatedAt": "2024-10-14T22:22:15.751Z"
+	}
+]
+
+```
+
+> GET /api/v1/services/:id
+
+- Descripción: Busca un servicio por su id
+- Restricciones: Solo disponible para administradores 
+  
+- Parámetros:
+  
+  - :id = _id del servicio
+  
+- Respuesta:
+  
+```json
+{
+	"_id": "670d9997adb7d1030436189a",
+	"name": "Cambio de filtro de aire",
+	"price": 40,
+	"time": 20,
+	"description": "Sustitución del filtro de aire para mejorar la eficiencia del motor y reducir el consumo de combustible.",
+	"pieces": [],
+	"__v": 0,
+	"createdAt": "2024-10-14T22:22:15.751Z",
+	"updatedAt": "2024-10-14T22:22:15.751Z"
+}
+
+```
+
+> POST /api/v1/services
+
+- Descripción: Crea un nuevo servicio
+- Restricciones: solo disponible para administradores
+  
+- Cuerpo de la solicitud:
+  
+```json
+ {
+          "name": "Sustitución de batería",
+          "price": 200,
+          "time": 45,  
+          "description": "Reemplazo de la batería del coche para asegurar un arranque fiable y el correcto funcionamiento de los sistemas eléctricos."
+}
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"message": "servicio creado correctamente",
+	"service": {
+		"name": "Sustitución de batería",
+		"price": 200,
+		"time": 45,
+		"description": "Reemplazo de la batería del coche para asegurar un arranque fiable y el correcto funcionamiento de los sistemas eléctricos.",
+		"pieces": [],
+		"_id": "671b0ac92f54470d88b1c845",
+		"createdAt": "2024-10-25T03:04:41.060Z",
+		"updatedAt": "2024-10-25T03:04:41.060Z",
+		"__v": 0
+	}
+}
+
+```
+
+> PUT /api/v1/services/:id
+
+- Descripción: Actualiza los datos de un servicio
+- Restricciones: solo disponible para administradores 
+  
+- Parámetros:
+  
+  - :id = _id del servicio
+  
+- Cuerpo de la solicitud:
+  
+```json
+ {
+   "price": 400,
+   "time": 90, 
+	 "pieces": ["67170a07e963f82db1b3f489","67170a07e963f82db1b3f488"]
+	 
+	 
+}
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"_id": "670d9997adb7d10304361898",
+	"name": "Cambio de pastillas de freno",
+	"price": 400,
+	"time": 90,
+	"description": "Sustitución de las pastillas de freno para mejorar la seguridad y el rendimiento de frenado del vehículo.",
+	"pieces": [
+		{
+			"_id": "67170a07e963f82db1b3f489",
+			"name": "Pastillas de freno",
+			"price": 70,
+			"description": "Juego de pastillas de freno de alta durabilidad, adecuado para mantenimiento de frenos.",
+			"__v": 0,
+			"createdAt": "2024-10-22T02:12:23.120Z",
+			"updatedAt": "2024-10-22T02:12:23.120Z"
+		},
+		{
+			"_id": "67170a07e963f82db1b3f488",
+			"name": "Filtro de aceite",
+			"price": 20,
+			"description": "Filtro de aceite compatible con la mayoría de los modelos de coches, necesario en cambios de aceite.",
+			"__v": 0,
+			"createdAt": "2024-10-22T02:12:23.119Z",
+			"updatedAt": "2024-10-22T02:12:23.119Z"
+		}
+	],
+	"__v": 0,
+	"createdAt": "2024-10-14T22:22:15.751Z",
+	"updatedAt": "2024-10-25T03:15:40.605Z"
+}
+
+```
+
+> DELETE /api/v1/services/:id
+ 
+- Descripción: Elimina un servicio
+- Restricciones: solo disponible para administradores
+  
+- Parámetros:
+  
+  - :id = _id del servicio
+  
+- Respuesta:
+  
+```json
+{
+	"message": "El servicio fue eliminado",
+	"service": {
+		"_id": "670d9997adb7d10304361898",
+		"name": "Cambio de pastillas de freno",
+		"price": 400,
+		"time": 90,
+		"description": "Sustitución de las pastillas de freno para mejorar la seguridad y el rendimiento de frenado del vehículo.",
+		"pieces": [
+			"67170a07e963f82db1b3f489",
+			"67170a07e963f82db1b3f488"
+		],
+		"__v": 0,
+		"createdAt": "2024-10-14T22:22:15.751Z",
+		"updatedAt": "2024-10-25T03:15:40.605Z"
+	}
+}
+
+```
+
+## Endpoints de pieces 🔩⚙️🔧
+
+> GET /api/v1/pieces
+
+- Descripción: Obtiene la lista de todos las piezas
+- Restricciones: disponible para cualquier usuario registrado y autenticado
+   
+- Respuesta:
+  
+```json
+[
+	{
+		"_id": "67170a07e963f82db1b3f488",
+		"name": "Filtro de aceite",
+		"price": 20,
+		"description": "Filtro de aceite compatible con la mayoría de los modelos de coches, necesario en cambios de aceite.",
+		"__v": 0,
+		"createdAt": "2024-10-22T02:12:23.119Z",
+		"updatedAt": "2024-10-22T02:12:23.119Z"
+	},
+	{
+		"_id": "67170a07e963f82db1b3f489",
+		"name": "Pastillas de freno",
+		"price": 70,
+		"description": "Juego de pastillas de freno de alta durabilidad, adecuado para mantenimiento de frenos.",
+		"__v": 0,
+		"createdAt": "2024-10-22T02:12:23.120Z",
+		"updatedAt": "2024-10-22T02:12:23.120Z"
+	},
+	{
+		"_id": "67170a07e963f82db1b3f48a",
+		"name": "Batería de coche",
+		"price": 150,
+		"description": "Batería de 12V para coches, con tecnología libre de mantenimiento y alta capacidad de arranque.",
+		"__v": 0,
+		"createdAt": "2024-10-22T02:12:23.120Z",
+		"updatedAt": "2024-10-22T02:12:23.120Z"
+	}
+]
+
+```
+
+> GET /api/v1/pieces/:id
+
+- Descripción: Busca una pieza por su id
+- Restricciones: Solo disponible para administradores 
+  
+- Parámetros:
+  
+  - :id = _id de la pieza
+  
+- Respuesta:
+  
+```json
+{
+	"_id": "67170a07e963f82db1b3f48a",
+	"name": "Batería de coche",
+	"price": 150,
+	"description": "Batería de 12V para coches, con tecnología libre de mantenimiento y alta capacidad de arranque.",
+	"__v": 0,
+	"createdAt": "2024-10-22T02:12:23.120Z",
+	"updatedAt": "2024-10-22T02:12:23.120Z"
+}
+
+```
+
+> POST /api/v1/pieces
+
+- Descripción: Crea una nueva pieza
+- Restricciones: solo disponible para administradores
+  
+- Cuerpo de la solicitud:
+  
+```json
+{
+    "name": "Correa de distribución",
+    "price": 180,
+    "description": "Correa de distribución de alta resistencia, crucial para la sincronización del motor en vehículos."      
+}
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"message": "pieza creada correctamente",
+	"service": {
+		"name": "Correa de distribución",
+		"price": 180,
+		"description": "Correa de distribución de alta resistencia, crucial para la sincronización del motor en vehículos.",
+		"_id": "671b12ea8ed1fa4aa486659b",
+		"createdAt": "2024-10-25T03:39:22.150Z",
+		"updatedAt": "2024-10-25T03:39:22.150Z",
+		"__v": 0
+	}
+}
+
+```
+
+> PUT /api/v1/pieces/:id
+
+- Descripción: Actualiza los datos de una pieza
+- Restricciones: solo disponible para administradores 
+  
+- Parámetros:
+  
+  - :id = _id de la pieza
+  
+- Cuerpo de la solicitud:
+  
+```json
+{       
+    "price": 280
+ }
+
+```
+
+- Respuesta:
+  
+```json
+{
+	"_id": "671b12ea8ed1fa4aa486659b",
+	"name": "Correa de distribución",
+	"price": 280,
+	"description": "Correa de distribución de alta resistencia, crucial para la sincronización del motor en vehículos.",
+	"createdAt": "2024-10-25T03:39:22.150Z",
+	"updatedAt": "2024-10-25T03:51:22.234Z",
+	"__v": 0
+}
+
+```
+
+> DELETE /api/v1/pieces/:id
+ 
+- Descripción: Elimina una pieza
+- Restricciones: solo disponible para administradores
+  
+- Parámetros:
+  
+  - :id = _id de la pieza
+  
+- Respuesta:
+  
+```json
+{
+	"message": "la pieza fue eliminada",
+	"piece": {
+		"_id": "671b12ea8ed1fa4aa486659b",
+		"name": "Correa de distribución",
+		"price": 280,
+		"description": "Correa de distribución de alta resistencia, crucial para la sincronización del motor en vehículos.",
+		"createdAt": "2024-10-25T03:39:22.150Z",
+		"updatedAt": "2024-10-25T03:51:22.234Z",
+		"__v": 0
+	}
+}
+
+```

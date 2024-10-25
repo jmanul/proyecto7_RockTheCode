@@ -73,7 +73,7 @@ const putService = async (req, res, next) => {
 
           const { id } = req.params;
 
-          const serviceUpdate = await Service.findByIdAndUpdate(id, req.body, { new: true });
+          const serviceUpdate = await Service.findByIdAndUpdate(id, req.body, { new: true }).populate("pieces");
 
           if (!serviceUpdate) {
                return res.status(404).json({ message: 'servicio no encontrado' });
