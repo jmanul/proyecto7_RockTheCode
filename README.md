@@ -5,6 +5,20 @@
 
 #### Esta API permite gestionar usuarios, vehículos, y servicios realizados a los vehículos en un entorno de taller automotriz. Está construida utilizando Node.js, Express y Mongoose para la base de datos MongoDB. Además, la autenticación y autorización se manejan mediante JWT (JSON Web Tokens) para garantizar que solo los usuarios autenticados y autorizados puedan acceder a los diferentes recursos de la API
 
+## Características principales
+
+- Autenticación JWT: Los usuarios pueden registrarse y autenticarse, los tokens permiten gestionar sesiones de forma segura.
+
+- La API soporta múltiples roles (por defecto: user). Los usuarios con rol de administrador pueden realizar todas las acciones (incluyendo hacer administrator a un user), mientras que los usuarios con rol user solo pueden realizar algunas acciones.
+
+- Actualización creación de contraseñas con encriptación mediante bcrypt.
+  
+- CRUD de usuarios y vehículos que podran añadirse al perfil de los usuarios.
+  
+- CRUD de servicios que podran ser añadidos a lo largo del tiempo a los vehiculos, cada uno con una fecha de realización.
+
+- CRUD de piezas que podran ser añadidas a los servicios para completarlos.
+
 ## Endpoints de registro y login 🔓🔐
 
 > POST /api/v1/register
